@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EcoPackAI — Sustainable Packaging Recommender</title>
+  <meta name="description" content="AI-powered sustainable packaging recommender. Predict eco-friendly packaging options with CO₂ and cost forecasts."/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+  <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet"/>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark eco-navbar">
+  <div class="container">
+    <a class="navbar-brand fw-bold fs-4" href="/">
+      <i class="fas fa-leaf me-2"></i>EcoPackAI
+    </a>
+    <div class="ms-auto d-flex align-items-center gap-2">
+      <span id="history-count-badge" class="history-nav-badge d-none">
+        <i class="fas fa-history me-1"></i><span id="history-nav-count">0</span> predictions
+      </span>
+      <a href="/dashboard" class="btn btn-outline-light btn-sm">
+        <i class="fas fa-chart-bar me-1"></i>Dashboard
+      </a>
+      <div class="vr mx-1" style="background-color: var(--eco-border); opacity: 0.5; height: 20px;"></div>
+      <span class="text-white-50 small me-1"><i class="fas fa-user me-1 text-success"></i>{{ username }}</span>
+      <a href="/logout" class="btn btn-outline-danger btn-sm" title="Log Out">
+        <i class="fas fa-sign-out-alt"></i>
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="eco-hero text-center py-5">
+  <div class="container">
+    <div class="hero-badge mb-3"><i class="fas fa-seedling me-2"></i>AI-Powered Sustainability</div>
+    <h1 class="display-5 fw-bold text-white mb-3">Smart Packaging Recommender</h1>
+    <p class="lead text-white-50 mb-0">Enter your product details and get AI-ranked eco-friendly packaging recommendations with real CO₂ and cost predictions.</p>
+  </div>
+</section>
+
+<!-- Main Content -->
+<div class="container my-5">
+  <div class="row g-4">
+
+    <!-- Input Form -->
+    <div class="col-lg-5">
+      <div class="eco-card h-100">
+        <div class="eco-card-header">
+          <i class="fas fa-box me-2"></i>Product Profile
+        </div>
+        <div class="eco-card-body">
+
+          <div class="mb-3">
+            <label class="form-label eco-label">Product Name <span class="text-muted fw-normal">(optional)</span></label>
+            <input type="text" id="product-name" class="form-control eco-input" placeholder="e.g. Ceramic Mug Set"/>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label eco-label">Product Weight (grams)</label>
+            <input type="number" id="weight" class="form-control eco-input" placeholder="e.g. 500" min="1" max="50000" value="500"/>
+          </div>
+
+          <div class="row g-2 mb-3">
+            <div class="col-6">
+              <label class="form-label eco-label">Material Type</label>
+              <select id="material" class="form-select eco-input">
+                <option value="Plastic">Plastic</option>
+                <option value="Metal">Metal</option>
+                <option value="Paper">Paper</option>
+                <option value="Bioplastic">Bioplastic</option>
+                <option value="Glass">Glass</option>
+                <option value="Ceramic">Ceramic</option>
+              </select>
+            </div>
+            <div class="col-6">
+              <label class="form-label eco-label">Fragility</label>
+              <select id="fragility" class="form-select eco-input">
+                <option value="Low">Low</option>
+                <option value="Medium" selected>Medium</option>
+                <option value="High">High</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row g-2 mb-3">
+            <div class="col-6">
+              <label class="form-label eco-label">Recyclable</label>
+              <select id="recyclable" class="form-select eco-input">
+                <option value="Yes" selected>Yes</option>
+                <option value="No">No</option>
+              </select>
+            </div>
+            <div class="col-6">
+              <label class="form-label eco-label">Transport Mode</label>
+              <select id="transport" class="form-select eco-input">
+                <option value="Land" selected>Land</option>
+                <option value="Air">Air</option>
+                <option value="Sea">Sea</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label eco-label">Product Category</label>
+            <select id="category" class="form-select eco-input">
+              <option value="E-Commerce" selected>E-Commerce</option>
+              <option value="Food &amp; Beverage">Food &amp; Beverage</option>
+              <option value="Electronics">Electronics</option>
+              <option value="Cosmetics">Cosmetics</option>
+              <option value="Pharma &amp; Health">Pharma &amp; Health</option>
+              <option value="Industrial">Industrial</option>
+              <option value="Home &amp; Decor">Home &amp; Decor</option>
+              <option value="General">General</option>
+            </select>
+          </div>
+
+          <button id="btn-recommend" class="btn eco-btn-primary w-100 py-2 fw-semibold" onclick="getRecommendations()">
+            <i class="fas fa-magic me-2"></i>Get AI Recommendations
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Results -->
+    <div class="col-lg-7">
+      <!-- Loading -->
+      <div id="loading" class="text-center py-5 d-none">
+        <div class="eco-spinner mx-auto mb-3"></div>
+        <p class="text-muted">Analysing product profile with AI models...</p>
+      </div>
+
+      <!-- Placeholder -->
+      <div id="placeholder" class="eco-card h-100 d-flex flex-column align-items-center justify-content-center text-center py-5">
+        <i class="fas fa-leaf fa-3x mb-3" style="color:var(--eco-green-light)"></i>
+        <h5 class="fw-semibold mb-2">Ready to Recommend</h5>
+        <p class="text-muted small">Fill in the product details and click the button to get AI-powered packaging suggestions ranked by sustainability score.</p>
+      </div>
+
+      <!-- Results cards -->
+      <div id="results" class="d-none">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <div>
+            <h5 class="fw-bold mb-0"><i class="fas fa-award me-2 text-success"></i>Top Recommendations</h5>
+            <div id="results-subtitle" class="text-muted" style="font-size:0.78rem;margin-top:2px"></div>
+          </div>
+          <div>
+            <button class="btn btn-sm btn-outline-success me-2" onclick="exportExcel()"><i class="fas fa-file-excel me-1"></i>Excel</button>
+            <button class="btn btn-sm btn-outline-danger" onclick="exportPDF()"><i class="fas fa-file-pdf me-1"></i>PDF</button>
+          </div>
+        </div>
+        <div id="rec-cards"></div>
+
+        <!-- Eco impact summary bar -->
+        <div id="eco-summary" class="eco-summary-bar mt-3"></div>
+      </div>
+
+      <!-- Error -->
+      <div id="error-box" class="alert alert-danger d-none mt-3" role="alert">
+        <i class="fas fa-exclamation-triangle me-2"></i><span id="error-msg"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Prediction History Section ───────────────────────────────── -->
+<section id="history-section" class="py-5 d-none">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h4 class="fw-bold mb-0"><i class="fas fa-history me-2" style="color:var(--eco-green)"></i>Prediction History</h4>
+        <p class="text-muted small mb-0 mt-1">Your last <span id="history-count">0</span> predictions — stored locally in your browser</p>
+      </div>
+      <button class="btn btn-sm btn-outline-danger" onclick="clearHistory()">
+        <i class="fas fa-trash me-1"></i>Clear History
+      </button>
+    </div>
+    <div id="history-cards" class="row g-3"></div>
+  </div>
+</section>
+
+<!-- How it works -->
+<section class="bg-light py-5">
+  <div class="container">
+    <h4 class="fw-bold text-center mb-4">How EcoPackAI Works</h4>
+    <div class="row g-4 text-center">
+      <div class="col-md-3">
+        <div class="eco-step-icon mx-auto mb-3">1</div>
+        <h6 class="fw-semibold">Input Product Details</h6>
+        <p class="text-muted small">Enter weight, material, fragility, transport and category</p>
+      </div>
+      <div class="col-md-3">
+        <div class="eco-step-icon mx-auto mb-3">2</div>
+        <h6 class="fw-semibold">AI Analysis</h6>
+        <p class="text-muted small">Random Forest + XGBoost models predict cost and CO₂ impact</p>
+      </div>
+      <div class="col-md-3">
+        <div class="eco-step-icon mx-auto mb-3">3</div>
+        <h6 class="fw-semibold">Ranked Results</h6>
+        <p class="text-muted small">Packaging options ranked by suitability, cost and sustainability</p>
+      </div>
+      <div class="col-md-3">
+        <div class="eco-step-icon mx-auto mb-3">4</div>
+        <h6 class="fw-semibold">Export Reports</h6>
+        <p class="text-muted small">Download sustainability reports in PDF or Excel format</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="eco-footer text-center py-3">
+  <small class="text-muted">EcoPackAI &copy; 2024 — AI-Powered Sustainable Packaging</small>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

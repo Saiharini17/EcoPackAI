@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EcoPackAI — BI Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+  <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet"/>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark eco-navbar">
+  <div class="container-fluid px-4">
+    <a class="navbar-brand fw-bold fs-5" href="/">
+      <i class="fas fa-leaf me-2"></i>EcoPackAI
+    </a>
+    <span class="text-white-50 ms-2 small d-none d-md-inline">/ BI Dashboard</span>
+    <div class="ms-auto d-flex align-items-center gap-2">
+      <a href="/" class="btn btn-outline-light btn-sm">
+        <i class="fas fa-magic me-1"></i>Recommender
+      </a>
+      <div class="vr mx-1" style="background-color: var(--eco-border); opacity: 0.5; height: 20px;"></div>
+      <span class="text-white-50 small me-1"><i class="fas fa-user me-1 text-success"></i>{{ username }}</span>
+      <a href="/logout" class="btn btn-outline-danger btn-sm" title="Log Out">
+        <i class="fas fa-sign-out-alt"></i>
+      </a>
+    </div>
+  </div>
+</nav>
+
+<div class="container-fluid px-4 py-4">
+
+  <!-- KPI Stats -->
+  <div class="row g-3 mb-4" id="kpi-row">
+    <div class="col-6 col-md-3"><div class="kpi-card"><div class="kpi-val" id="k-products">—</div><div class="kpi-lbl"><i class="fas fa-box me-1"></i>Total Products</div></div></div>
+    <div class="col-6 col-md-3"><div class="kpi-card"><div class="kpi-val" id="k-materials">—</div><div class="kpi-lbl"><i class="fas fa-layer-group me-1"></i>Material Types</div></div></div>
+    <div class="col-6 col-md-3"><div class="kpi-card"><div class="kpi-val" id="k-co2">—</div><div class="kpi-lbl"><i class="fas fa-cloud me-1"></i>Avg CO₂ (kg)</div></div></div>
+    <div class="col-6 col-md-3"><div class="kpi-card"><div class="kpi-val eco-green" id="k-savings">—%</div><div class="kpi-lbl"><i class="fas fa-leaf me-1"></i>CO₂ Saved vs Plastic</div></div></div>
+  </div>
+
+  <!-- ML Model Metrics -->
+  <div class="row g-3 mb-4">
+    <div class="col-12"><h6 class="fw-semibold text-muted mb-2 text-uppercase" style="font-size:11px;letter-spacing:.06em">ML Model Performance</h6></div>
+    <div class="col-md-4"><div class="kpi-card text-center"><div class="kpi-val" id="m-rf-r2">—</div><div class="kpi-lbl">Random Forest R² (Cost)</div></div></div>
+    <div class="col-md-4"><div class="kpi-card text-center"><div class="kpi-val" id="m-xgb-r2">—</div><div class="kpi-lbl">XGBoost R² (CO₂)</div></div></div>
+    <div class="col-md-4"><div class="kpi-card text-center"><div class="kpi-val eco-green" id="m-acc">—</div><div class="kpi-lbl">Classifier Accuracy</div></div></div>
+  </div>
+
+  <!-- Charts row 1 -->
+  <div class="row g-3 mb-4">
+    <div class="col-lg-6"><div class="eco-card"><div class="eco-card-header"><i class="fas fa-cloud me-2"></i>Avg CO₂ by Packaging Option</div><div class="eco-card-body"><div id="chart-co2" style="height:280px"></div></div></div></div>
+    <div class="col-lg-6"><div class="eco-card"><div class="eco-card-header"><i class="fas fa-dollar-sign me-2"></i>Avg Cost by Packaging Option</div><div class="eco-card-body"><div id="chart-cost" style="height:280px"></div></div></div></div>
+  </div>
+
+  <!-- Charts row 2 -->
+  <div class="row g-3 mb-4">
+    <div class="col-lg-4"><div class="eco-card"><div class="eco-card-header"><i class="fas fa-recycle me-2"></i>Recyclability by Material</div><div class="eco-card-body"><div id="chart-recyc" style="height:260px"></div></div></div></div>
+    <div class="col-lg-4"><div class="eco-card"><div class="eco-card-header"><i class="fas fa-truck me-2"></i>Transport Mode Mix</div><div class="eco-card-body"><div id="chart-transport" style="height:260px"></div></div></div></div>
+    <div class="col-lg-4"><div class="eco-card"><div class="eco-card-header"><i class="fas fa-seedling me-2"></i>Biodegradability by Material</div><div class="eco-card-body"><div id="chart-biodeg" style="height:260px"></div></div></div></div>
+  </div>
+
+  <!-- Category distribution -->
+  <div class="row g-3 mb-4">
+    <div class="col-12"><div class="eco-card"><div class="eco-card-header"><i class="fas fa-th me-2"></i>Product Category Distribution</div><div class="eco-card-body"><div id="chart-category" style="height:240px"></div></div></div></div>
+  </div>
+
+</div>
+
+<footer class="eco-footer text-center py-3">
+  <small class="text-muted">EcoPackAI BI Dashboard &copy; 2024</small>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</body>
+</html>
