@@ -7,21 +7,21 @@
 
 /* ── Design tokens (matches style.css) ──────────────────────── */
 const COLORS = {
-  green:      '#1dd275',
-  greenLight: '#4ade9f',
-  teal:       '#0ff0b3',
-  greenDark:  '#0d8a48',
-  text:       '#e8f5ee',
-  textMuted:  '#7a9e8a',
-  surface:    'rgba(255,255,255,0.04)',
-  gold:       '#f5c542',
-  silver:     '#b0bec5',
-  bronze:     '#cd8a5a',
+  green:      '#286d4b',
+  greenLight: '#76a75d',
+  teal:       '#9bc34d',
+  greenDark:  '#174c35',
+  text:       '#34443a',
+  textMuted:  '#7b877e',
+  surface:    '#ffffff',
+  gold:       '#c5dc62',
+  silver:     '#b9c9b8',
+  bronze:     '#dda46d',
 };
 
 const PALETTE = [
-  '#1dd275', '#0ff0b3', '#4ade9f', '#16b862', '#0d8a48',
-  '#f5c542', '#cd8a5a', '#b0bec5', '#5bc8f5', '#c97af5'
+  '#286d4b', '#528a55', '#78a75b', '#9cbd56', '#c5dc62',
+  '#d6a64a', '#dda46d', '#a8b8a9', '#639b83', '#849c54'
 ];
 
 const PLOTLY_BASE = {
@@ -30,20 +30,20 @@ const PLOTLY_BASE = {
   font:          { family: 'Outfit, system-ui, sans-serif', color: COLORS.textMuted, size: 12 },
   margin:        { t: 20, r: 10, b: 50, l: 50 },
   xaxis: {
-    gridcolor:    'rgba(255,255,255,0.05)',
-    linecolor:    'rgba(255,255,255,0.07)',
+    gridcolor:    '#edf0eb',
+    linecolor:    '#e2e8e1',
     tickfont:     { color: COLORS.textMuted, size: 11 },
     title:        { font: { color: COLORS.textMuted } }
   },
   yaxis: {
-    gridcolor:    'rgba(255,255,255,0.05)',
-    linecolor:    'rgba(255,255,255,0.07)',
+    gridcolor:    '#edf0eb',
+    linecolor:    '#e2e8e1',
     tickfont:     { color: COLORS.textMuted, size: 11 },
     title:        { font: { color: COLORS.textMuted } }
   },
   legend: {
     font:         { color: COLORS.textMuted },
-    bgcolor:      'rgba(0,0,0,0)'
+    bgcolor:      'rgba(255,255,255,0)'
   }
 };
 
@@ -127,7 +127,7 @@ function chartCO2ByPackaging(data) {
     marker: {
       color: values.map((v, i) => PALETTE[i % PALETTE.length]),
       opacity: 0.85,
-      line: { color: 'rgba(255,255,255,0.1)', width: 1 }
+      line: { color: '#ffffff', width: 1 }
     },
     hovertemplate: '<b>%{x}</b><br>Avg CO₂: %{y:.3f} kg<extra></extra>',
     text: values.map(v => v.toFixed(3)),
@@ -151,7 +151,7 @@ function chartCostByPackaging(data) {
     marker: {
       color: values.map((v, i) => PALETTE[(i + 2) % PALETTE.length]),
       opacity: 0.85,
-      line: { color: 'rgba(255,255,255,0.1)', width: 1 }
+      line: { color: '#ffffff', width: 1 }
     },
     hovertemplate: '<b>%{x}</b><br>Avg Cost: $%{y:.2f}<extra></extra>',
     text: values.map(v => '$' + v.toFixed(2)),
@@ -176,7 +176,7 @@ function chartRecyclability(data) {
     marker: {
       color: values.map(v => v >= 80 ? COLORS.green : v >= 50 ? COLORS.gold : '#e05c5c'),
       opacity: 0.85,
-      line: { color: 'rgba(255,255,255,0.1)', width: 1 }
+      line: { color: '#ffffff', width: 1 }
     },
     hovertemplate: '<b>%{x}</b><br>Recyclable: %{y:.1f}%<extra></extra>',
     text: values.map(v => v.toFixed(1) + '%'),
@@ -201,7 +201,7 @@ function chartTransport(data) {
     values,
     marker: {
       colors: [COLORS.green, COLORS.gold, COLORS.teal, COLORS.silver],
-      line: { color: 'rgba(11,26,20,1)', width: 2 }
+      line: { color: '#ffffff', width: 2 }
     },
     textinfo: 'label+percent',
     hovertemplate: '<b>%{label}</b><br>%{value} products (%{percent})<extra></extra>',
@@ -227,7 +227,7 @@ function chartBiodeg(data) {
       color: values.map(v =>
         v >= 75 ? COLORS.green : v >= 40 ? COLORS.gold : '#e05c5c'),
       opacity: 0.85,
-      line: { color: 'rgba(255,255,255,0.1)', width: 1 }
+      line: { color: '#ffffff', width: 1 }
     },
     hovertemplate: '<b>%{x}</b><br>Biodegradability: %{y}<extra></extra>',
     text: values.map(v => v.toFixed(0)),
@@ -253,7 +253,7 @@ function chartCategory(data) {
     marker: {
       color: values.map((v, i) => PALETTE[i % PALETTE.length]),
       opacity: 0.85,
-      line: { color: 'rgba(255,255,255,0.1)', width: 1 }
+      line: { color: '#ffffff', width: 1 }
     },
     hovertemplate: '<b>%{x}</b><br>Products: %{value}<extra></extra>',
     text: values,
