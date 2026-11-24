@@ -57,3 +57,8 @@ python app.py
 ```
 
 ---
+## 🌐 Live Demo
+
+**Try EcoPackAI here:** https://ecopackai-yl9f.onrender.com
+
+The application is deployed on Render and uses PostgreSQL for database management.
