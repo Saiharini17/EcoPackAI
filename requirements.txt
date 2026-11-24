@@ -1,3 +1,4 @@
+
 flask==3.0.3
 pandas==2.2.2
 numpy==1.26.4
@@ -8,3 +9,6 @@ plotly==5.22.0
 openpyxl==3.1.5
 reportlab==4.2.2
 gunicorn==22.0.0
+psycopg2-binary
+Flask-Login==0.6.3
+python-dotenv
